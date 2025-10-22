@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Freelo API – DELETE endpointy</title>
+<style>
+  body { font-family: "SF Pro Text", Arial, sans-serif; background: #fafafa; color: #222; margin: 2rem; }
+  h1 { color: #0072ff; }
+  table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+  th, td { padding: 10px 12px; border-bottom: 1px solid #ddd; vertical-align: top; }
+  th { background: #f0f4f8; text-align: left; }
+  tr:hover { background: #f9fcff; }
+  code { background: #f4f4f4; padding: 4px 6px; border-radius: 5px; font-size: 0.9em; display: inline-block; }
+  button { background: #0072ff; color: white; border: none; padding: 6px 10px; border-radius: 5px; cursor: pointer; margin-top: 4px; }
+  button:hover { background: #005ed1; }
+</style>
+<script>
+function copyToClipboard(button) {
+  const codeElement = button.parentElement.querySelector('code');
+  const text = codeElement ? codeElement.innerText : '';
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    button.textContent = '✅ Zkopírováno!';
+    setTimeout(() => button.textContent = 'Copy', 1500);
+  });
+}
+
+function generateJsFile(endpoint, name) {
+  const method = "delete";
+  const code = 
+`const axios = require('axios');
+
+module.exports = async (req, res) => {
+  const FRELO_EMAIL = process.env.FRELO_EMAIL;
+  const FRELO_API_KEY = process.env.FRELO_API_KEY;
+
+  try {
+    const response = await axios.${method}(\`https://api.freelo.io/v1${endpoint}\`, {
+      auth: { username: FRELO_EMAIL, password: FRELO_API_KEY },
+      headers: { 'User-Agent': 'FreeloGPTProxy (proxy@vercel.app)' }
+    });
+    res.status(200).json(response.data);
+  } catch (err) {
+    res.status(err.response?.status || 500).json({ error: err.message, details: err.response?.data || null });
+  }
+};`;
+
+  const blob = new Blob([code], { type: "application/javascript" });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = name + ".js";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+</script>
+</head>
+<body>
+
+<h1>📘 Freelo API – DELETE endpointy</h1>
+
+<table>
+<thead>
+<tr>
+  <th>Endpoint</th>
+  <th>Popis</th>
+  <th>cURL</th>
+  <th>.js</th>
+</tr>
+</thead>
+<tbody>
+
+<tr><td>/custom-field-enum/delete/{custom_field_enum_uuid}</td><td>Smaže hodnotu výčtového pole</td><td><code>curl -u "$FREELO_AUTH" -X DELETE "https://api.freelo.io/v1/custom-field-enum/delete/{custom_field_enum_uuid}"</code><br><button onclick="copyToClipboard(this)">Copy</button></td><td><button onclick="generateJsFile('/custom-field-enum/delete/{custom_field_enum_uuid}', 'deleteCustomFieldEnum')">Download .js</button></td></tr>
+
+<tr><td>/custom-field-enum/force-delete/{custom_field_enum_uuid}</td><td>Trvale smaže hodnotu výčtového pole</td><td><code>curl -u "$FREELO_AUTH" -X DELETE "https://api.freelo.io/v1/custom-field-enum/force-delete/{custom_field_enum_uuid}"</code><br><button onclick="copyToClipboard(this)">Copy</button></td><td><button onclick="generateJsFile('/custom-field-enum/force-delete/{custom_field_enum_uuid}', 'forceDeleteCustomFieldEnum')">Download .js</button></td></tr>
+
+<tr><td>/custom-field/delete-value/{uuid}</td><td>Smaže hodnotu vlastního pole</td><td><code>curl -u "$FREELO_AUTH" -X DELETE "https://api.freelo.io/v1/custom-field/delete-value/{uuid}"</code><br><button onclick="copyToClipboard(this)">Copy</button></td><td><button onclick="generateJsFile('/custom-field/delete-value/{uuid}', 'deleteCustomFieldValue')">Download .js</button></td></tr>
+
+<tr><td>/custom-field/delete/{uuid}</td><td>Smaže celé vlastní pole</td><td><code>curl -u "$FREELO_AUTH" -X DELETE "https://api.freelo.io/v1/custom-field/delete/{uuid}"</code><br><button onclick="copyToClipboard(this)">Copy</button></td><td><button onclick="generateJsFile('/custom-field/delete/{uuid}', 'deleteCustomField')">Download .js</button></td></tr>
+
+<tr><td>/work-reports/{work_report_id}</td><td>Smaže výkaz práce</td><td><code>curl -u "$FREELO_AUTH" -X DELETE "https://api.freelo.io/v1/work-reports/{work_report_id}"</code><br><button onclick="copyToClipboard(this)">Copy</button></td><td><button onclick="generateJsFile('/work-reports/{work_report_id}', 'deleteWorkReport')">Download .js</button></td></tr>
+
+</tbody>
+</table>
+
+</body>
+</html>
