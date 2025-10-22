@@ -9,15 +9,18 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const response = await axios.get(`https://api.freelo.io/v1/projects/${projectId}/tasks`, {
-      auth: {
-        username: FRELO_EMAIL,
-        password: FRELO_API_KEY,
-      },
-      headers: {
-        'User-Agent': 'GPT-Freelo-Proxy (you@example.com)',
-      },
-    });
+    const response = await axios.get(
+      `https://api.freelo.io/v1/project/${projectId}/tasks`,
+      {
+        auth: {
+          username: FRELO_EMAIL,
+          password: FRELO_API_KEY,
+        },
+        headers: {
+          'User-Agent': 'GPT-Freelo-Proxy (you@example.com)',
+        },
+      }
+    );
 
     res.status(200).json(response.data);
   } catch (err) {
@@ -27,3 +30,4 @@ module.exports = async (req, res) => {
     });
   }
 };
+
